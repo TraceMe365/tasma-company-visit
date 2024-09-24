@@ -66,11 +66,11 @@ class WialonController extends Controller
         return json_decode($response,true);
     }
 
-    public function executeReport($unit,$from,$to)
+    public function executeReport($from,$to)
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://hst-api.wialon.com/wialon/ajax.html?svc=report/exec_report&params={"reportResourceId":22085743,"reportTemplateId":93,"reportTemplate":null,"reportObjectId":'.$unit.',"reportObjectSecId":0,"interval":{"flags":16777216,"from":'.$from.',"to":'.$to.'}}&sid='.$this->eid,
+          CURLOPT_URL => 'https://hst-api.wialon.com/wialon/ajax.html?svc=report/exec_report&params={"reportResourceId":17258773,"reportTemplateId":59,"reportTemplate":null,"reportObjectId":25660191,"reportObjectSecId":0,"interval":{"flags":16777216,"from":'.$from.',"to":'.$to.'},"reportObjectIdList":[]}&sid='.$this->eid,
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
@@ -81,13 +81,14 @@ class WialonController extends Controller
         ));
         $response = curl_exec($curl);
         curl_close($curl);
+        return json_decode($response,1);
     }
 
-    public function getRecords()
+    public function getRecords($row)
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hst-api.wialon.com/wialon/ajax.html?svc=report/select_result_rows&sid='.$this->eid.'&params={"tableIndex":0,"config":{"type":"range","data":{"from":0,"to":19,"level":0,"unitInfo":1}}}',
+        CURLOPT_URL => 'https://hst-api.wialon.com/wialon/ajax.html?svc=report/select_result_rows&sid='.$this->eid.'&params={"tableIndex":0,"config":{"type":"range","data":{"from":0,"to":'.$row.',"level":0,"unitInfo":1}}}',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -98,7 +99,7 @@ class WialonController extends Controller
         ));
         $response = curl_exec($curl);
         curl_close($curl);
-        return json_decode($response,true);
+        return json_decode($response,1);
     }
 
 
