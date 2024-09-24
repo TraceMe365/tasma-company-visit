@@ -18,13 +18,24 @@ class ReportController extends Controller
 
     function exportUsers(){
         // return Excel::download(new UsersExport, 'users.xlsx');
+        
+        // $export = new SSExport([
+        //     ['','',[1,2,3,4,5,6,7,8,9,10],''],
+        //     ['Ceylon Petroleum Storage', 'Kollonawa', [1, 2, 3, 4], 10],
+        //     ['Company XYZ', 'Location ABC', [5, 6], 8],
+        //     ['Company 123', 'Location DEF', [7, 8, 9], 5],
+        //     ['Company 123', 'Location DEF', [7, 8, 9,10,13,14], 5],
+        // ]);
+        // return Excel::download($export, 'invoices.xlsx');
+        
+        $from = '2024-09-10';
+        $to = '2024-09-15';
+        $days = $this->getDaysInBetween($from,$to);
+        $firstRow = ['','',$days,''];
         $export = new SSExport([
-            ['','',[1,2,3,4,5,6,7,8,9,10],''],
-            ['Ceylon Petroleum Storage', 'Kollonawa', [1, 2, 3, 4], 10],
-            ['Company XYZ', 'Location ABC', [5, 6], 8],
-            ['Company 123', 'Location DEF', [7, 8, 9], 5],
-            ['Company 123', 'Location DEF', [7, 8, 9,10,13,14], 5],
-        ]);
+            $firstRow,
+            ['Ceylon Petroleum Storage', 'Kollonawa', [1, 2, 3, 4], 10]
+        ],'Megatron');
         return Excel::download($export, 'invoices.xlsx');
     }
     
@@ -56,12 +67,43 @@ class ReportController extends Controller
                         }
                         if(!empty($data)){
                             // Create Excel
-                           
+                            $formatted = $this->createFormattedArray($data,$fromHuman,$toHuman);
                         }
                     }
                 }
             }
         }
+    }
+
+    function createFormattedArray($array,$from,$to)
+    {
+        $days = $this->getDaysInBetween($from,$to);
+        $firstRow = ['','',$days,''];
+        
+    }
+
+    function getDaysInBetween($from,$to)
+    {
+        $startDate = new \DateTime($from);
+        $endDate = new \DateTime($to);
+
+        // Create an interval of 1 day
+        $interval = new \DateInterval('P1D');
+
+        // Create a DatePeriod to get all dates between start and end
+        $datePeriod = new \DatePeriod($startDate, $interval, $endDate->modify('+1 day'));
+
+        // Initialize an array to hold the dates
+        $datesBetween = [];
+
+        // Loop through the DatePeriod and add dates to the array
+        foreach ($datePeriod as $date) {
+            $datesBetween[] = $date->format('Y-m-d');
+        }
+
+        // Output the results
+        return ($datesBetween);
+
     }
 
 

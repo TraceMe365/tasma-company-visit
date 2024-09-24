@@ -6,6 +6,7 @@ use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 // class SSExport implements FromArray,WithHeadings, WithEvents, ShouldAutoSize
@@ -110,13 +111,15 @@ use Maatwebsite\Excel\Events\AfterSheet;
 //     }
 // }
 
-class SSExport implements FromArray, WithHeadings, WithEvents, ShouldAutoSize
+class SSExport implements FromArray, WithHeadings, WithEvents, ShouldAutoSize, WithTitle
 {
     protected $data;
+    protected $title;
 
-    public function __construct(array $data)
+    public function __construct(array $data,string $title)
     {
         $this->data = $data;
+        $this->title = $title;
     }
 
     public function array(): array
@@ -217,5 +220,10 @@ class SSExport implements FromArray, WithHeadings, WithEvents, ShouldAutoSize
             $columnNumber = (int)(($columnNumber - $remainder) / 26);
         }
         return $columnLetter;
+    }
+    
+    public function title(): string
+    {
+        return $this->title;
     }
 }
