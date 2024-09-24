@@ -70,7 +70,7 @@ class WialonController extends Controller
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://hst-api.wialon.com/wialon/ajax.html?svc=report/exec_report&params={"reportResourceId":17258773,"reportTemplateId":59,"reportTemplate":null,"reportObjectId":25660191,"reportObjectSecId":0,"interval":{"flags":16777216,"from":'.$from.',"to":'.$to.'},"reportObjectIdList":[]}&sid='.$this->eid,
+          CURLOPT_URL => 'https://hst-api.wialon.com/wialon/ajax.html?svc=report/exec_report&params={"reportResourceId":17258773,"reportTemplateId":60,"reportTemplate":null,"reportObjectId":25660191,"reportObjectSecId":0,"interval":{"flags":16777216,"from":'.$from.',"to":'.$to.'},"reportObjectIdList":[]}&sid='.$this->eid,
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
@@ -88,7 +88,7 @@ class WialonController extends Controller
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hst-api.wialon.com/wialon/ajax.html?svc=report/select_result_rows&sid='.$this->eid.'&params={"tableIndex":0,"config":{"type":"range","data":{"from":0,"to":'.$row.',"level":0,"unitInfo":1}}}',
+        CURLOPT_URL => 'https://hst-api.wialon.com/wialon/ajax.html?svc=report/select_result_rows&sid='.$this->eid.'&params={"tableIndex":0,"config":{"type":"range","data":{"from":0,"to":'.$row.',"level":1,"unitInfo":1}}}',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,

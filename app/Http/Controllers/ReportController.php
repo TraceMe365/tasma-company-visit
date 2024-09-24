@@ -25,6 +25,15 @@ class ReportController extends Controller
                 if(isset($rows)){
                     $result = $this->wialonController->getRecords($rows);
                     print_r($result);
+                    die();
+                    if(!empty($result)){
+                        $data = [];
+                        foreach($result as $record){
+                            $rec = [];
+                            $rec['name'] = $record['c'][1];
+                            $rec['date'] = $record['c'][4]['t'];
+                        }
+                    }
                 }
             }
         }
