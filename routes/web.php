@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +21,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::post('/reportExecute',[App\Http\Controllers\ReportController::class, 'executeReportByRange'])->name('report.execute-by-range');
+Route::post('/reportExecute',[ReportController::class, 'executeReportByRange'])->name('report.execute-by-range');
+Route::get('/export-users', [ReportController::class, 'exportUsers'])->name('export.users');

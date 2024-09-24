@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SSExport;
 use App\Exports\UsersExport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WialonController;
@@ -14,10 +15,20 @@ class ReportController extends Controller
     public function __construct(WialonController $wialonController){
         $this->wialonController = $wialonController;
     }
+
+    function exportUsers(){
+        // return Excel::download(new UsersExport, 'users.xlsx');
+        $export = new SSExport([
+            ['','',[1,2,3,4,5,6,7,8,9,10],''],
+            ['Ceylon Petroleum Storage', 'Kollonawa', [1, 2, 3, 4], 10],
+            ['Company XYZ', 'Location ABC', [5, 6], 8],
+            ['Company 123', 'Location DEF', [7, 8, 9], 5],
+            ['Company 123', 'Location DEF', [7, 8, 9,10,13,14], 5],
+        ]);
+        return Excel::download($export, 'invoices.xlsx');
+    }
     
     function executeReportByRange(){
-        return Excel::download(new UsersExport, 'users.xlsx');
-        die();
         $from      = $_POST['from'];
         $to        = $_POST['to'];
         $fromHuman = $_POST['from_human'];
@@ -45,6 +56,7 @@ class ReportController extends Controller
                         }
                         if(!empty($data)){
                             // Create Excel
+                           
                         }
                     }
                 }
