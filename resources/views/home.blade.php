@@ -51,11 +51,23 @@
                 "from_human": from,
                 "to_human"  : to
             },
-            success: function(response) {
-                console.log(response);
+            xhrFields: {
+                responseType: 'blob' // Set response type to blob for file download
+            },
+            success: function(data) {
+            // Create a link element to download the file
+            const link = document.createElement('a');
+            const url = window.URL.createObjectURL(data);
+            link.href = url;
+            link.download = 'Company Visit Summary.xlsx'; // Set the file name
+            document.body.appendChild(link);
+            link.click(); // Trigger download
+            document.body.removeChild(link); // Clean up
+            window.URL.revokeObjectURL(url); // Release the object URL
             },
             error: function(xhr, status, error) {
-                console.error(xhr.responseText);
+                console.error('Export failed:', error);
+                alert('An error occurred while exporting. Please try again.');
             }
         })
     });

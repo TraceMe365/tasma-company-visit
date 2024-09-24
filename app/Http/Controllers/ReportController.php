@@ -28,15 +28,16 @@ class ReportController extends Controller
         // ]);
         // return Excel::download($export, 'invoices.xlsx');
         
-        $from = '2024-09-10';
-        $to = '2024-09-15';
-        $days = $this->getDaysInBetween($from,$to);
+        $from     = '2024-09-10';
+        $to       = '2024-09-15';
+        $days     = $this->getDaysInBetween($from,$to);
         $firstRow = ['','',$days,''];
-        $export = new SSExport([
+        $export   = new SSExport([
             $firstRow,
             ['Ceylon Petroleum Storage', 'Kollonawa', [1, 2, 3, 4], 10]
         ],'Megatron');
         return Excel::download($export, 'invoices.xlsx');
+
     }
     
     function executeReportByRange(){
@@ -44,6 +45,16 @@ class ReportController extends Controller
         $to        = $_POST['to'];
         $fromHuman = $_POST['from_human'];
         $toHuman   = $_POST['to_human'];
+
+        // ----------------------------------------------------------------
+        $days     = $this->getDaysInBetween($fromHuman,$toHuman);
+        $firstRow = ['','',$days,''];
+        $export   = new SSExport([
+            $firstRow,
+            ['Ceylon Petroleum Storage', 'Kollonawa', [1, 2, 3, 4], 10]
+        ],'Megatron');
+        return Excel::download($export, 'Company Visit Summary.xlsx');
+        // -----------------------------------------------------------------
 
         if(isset($from,$to) && ($from < $to)){
             $this->wialonController->getSessionEID();
