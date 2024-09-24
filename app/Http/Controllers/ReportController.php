@@ -46,16 +46,6 @@ class ReportController extends Controller
         $fromHuman = $_POST['from_human'];
         $toHuman   = $_POST['to_human'];
 
-        // ----------------------------------------------------------------
-        $days     = $this->getDaysInBetween($fromHuman,$toHuman);
-        $firstRow = ['','',$days,''];
-        $export   = new SSExport([
-            $firstRow,
-            ['Ceylon Petroleum Storage', 'Kollonawa', [1, 2, 3, 4], 10]
-        ],'Megatron');
-        return Excel::download($export, 'Company Visit Summary.xlsx');
-        // -----------------------------------------------------------------
-
         if(isset($from,$to) && ($from < $to)){
             $this->wialonController->getSessionEID();
             $this->wialonController->setTimeZone();
@@ -71,14 +61,18 @@ class ReportController extends Controller
                             $rec['name'] = $record['c'][1];
                             $rec['date'] = $record['c'][4]['t'];
                             foreach($record['r'] as $loc){
-                                $rec['locations']['location_name'][] = $loc['c'][2]; 
-                                $rec['locations']['location_date'][] = $loc['c'][4]['t']; 
+                                $rec['locations']['location_name'][]    = $loc['c'][2];
+                                $rec['locations']['location_address'][] = $loc['c'][3];
+                                $rec['locations']['location_date'][]    = $loc['c'][4]['t'];
+                                $rec['locations']['location_visits'][]  = $record['c'][5];
                             }
                             array_push($data,$rec);
                         }
                         if(!empty($data)){
-                            // Create Excel
-                            $formatted = $this->createFormattedArray($data,$fromHuman,$toHuman);
+                            foreach($data as $array){
+                                // Create Excel
+                                $formatted = $this->createFormattedArray($array,$fromHuman,$toHuman);
+                            }
                         }
                     }
                 }
@@ -88,9 +82,53 @@ class ReportController extends Controller
 
     function createFormattedArray($array,$from,$to)
     {
-        $days = $this->getDaysInBetween($from,$to);
+        $days     = $this->getDaysInBetween($from,$to);
+        $allRows  = [];
         $firstRow = ['','',$days,''];
+        array_push($allRows,$firstRow);
+       
+        for ($i = 0; $i < count($array['locations']['location_name']); $i++) {
+            $row = [
+                $array['locations']['location_name'][$i], 
+                $array['locations']['location_address'][$i],
+                [$array['locations']['location_date'][$i]],
+                $array['locations']['location_visits'][$i], 
+            ];
+            array_push($allRows, $row);
+        }
         
+        // Remove timestamp from record
+        foreach($allRows as $index=>&$or){
+            // Skip Header
+            if($index>0){
+                foreach($or[2] as &$dt){
+                    $dt = explode(' ', $dt)[0];
+                }
+            }
+        }
+
+        // Formatting Dates
+        $availableDates = $allRows[0][2];
+        foreach ($allRows as $index => &$rows) {
+            if ($index === 0) {
+                continue;
+            }
+        
+            // Get the dates from the second array
+            $datesInSecondArray = $rows[2];
+            $newDates = [];
+            foreach ($availableDates as $date) {
+                if (in_array($date, $datesInSecondArray)) {
+                    $newDates[] = $date;
+                } else {
+                    $newDates[] = ""; 
+                }
+            }        
+            $rows[2] = $newDates;
+        }
+        $allRowsNoIndex = [];
+        $export   = new SSExport($allRows,'Name');
+        Excel::store($export, 'CompanyVisitSummary.xlsx','local');
     }
 
     function getDaysInBetween($from,$to)
@@ -115,6 +153,25 @@ class ReportController extends Controller
         // Output the results
         return ($datesBetween);
 
+    }
+
+    function flattenArray($nestedArray) {
+        $flattened = [];
+    
+        foreach ($nestedArray as $row) {
+            foreach ($row as $subRow) {
+                // Check if it's an array
+                if (is_array($subRow)) {
+                    // Merge sub-row into the flattened array
+                    $flattened[] = array_merge($subRow);
+                } else {
+                    // Add non-array elements directly
+                    $flattened[] = $subRow;
+                }
+            }
+        }
+    
+        return $flattened;
     }
 
 

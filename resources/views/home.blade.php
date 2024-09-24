@@ -55,15 +55,7 @@
                 responseType: 'blob' // Set response type to blob for file download
             },
             success: function(data) {
-            // Create a link element to download the file
-            const link = document.createElement('a');
-            const url = window.URL.createObjectURL(data);
-            link.href = url;
-            link.download = 'Company Visit Summary.xlsx'; // Set the file name
-            document.body.appendChild(link);
-            link.click(); // Trigger download
-            document.body.removeChild(link); // Clean up
-            window.URL.revokeObjectURL(url); // Release the object URL
+                console.log(data);
             },
             error: function(xhr, status, error) {
                 console.error('Export failed:', error);

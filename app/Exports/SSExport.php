@@ -160,9 +160,11 @@ class SSExport implements FromArray, WithHeadings, WithEvents, ShouldAutoSize, W
     public function headings(): array
     {
         // Determine the max number of visit dates across all rows
+        
         $maxVisits = max(array_map(function ($row) {
             return count($row[2]);
         }, $this->data));
+
 
         // Prepare the headings
         $headings = ['Company Name', 'Company Location', 'Visit Date'];
