@@ -45,8 +45,10 @@
             url:"{{ route('report.execute-by-range') }}",
             type: 'POST',
             data: {
-                "from": fromUnix,
-                "to"  : toUnix
+                "from"      : fromUnix,
+                "to"        : toUnix,
+                "from_human": from,
+                "to_human"  : to
             },
             success: function(response) {
                 console.log(response);
