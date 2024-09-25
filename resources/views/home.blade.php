@@ -57,7 +57,7 @@
                 if (response.fileUrl) {
                     var link = document.createElement('a');
                     link.href = response.fileUrl;
-                    link.download = 'Company-Visit-Summary.xlsx';
+                    link.download = 'Company Visit Summary.xlsx';
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);

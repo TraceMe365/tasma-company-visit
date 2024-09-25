@@ -162,6 +162,14 @@ class ReportController extends Controller
 
         // Convert back to a normal indexed array if needed
         $mergedLocations = array_values($mergedLocations);
+
+        // Count Visits Per Location
+        foreach($mergedLocations as $ind=>&$loc){
+            if($ind>0){
+                $loc[3] = count(array_filter($loc[2]));
+            }
+        }
+       
         return $mergedLocations;
     }
 
