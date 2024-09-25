@@ -23,7 +23,6 @@ class MultiSheetExport implements WithMultipleSheets
     {   
         $sheets = [];
         foreach ($this->data as $index => $sheetData) {
-            // print_r($sheetData);die();
             $sheets[] = new SSExport($sheetData, $this->names[$index]);
         }
         return $sheets;

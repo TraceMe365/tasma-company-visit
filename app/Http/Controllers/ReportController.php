@@ -169,6 +169,18 @@ class ReportController extends Controller
                 $loc[3] = count(array_filter($loc[2]));
             }
         }
+
+        // Change Date to X for now
+        foreach($mergedLocations as $ind=>&$row){
+            $datePattern = '/\d{4}-\d{2}-\d{2}/';
+            if($ind>0){
+                foreach($row[2] as &$loc){
+                    if (preg_match($datePattern, $loc)) {
+                        $loc = preg_replace($datePattern, 'x', $loc);
+                    }
+                }
+            }
+        }
        
         return $mergedLocations;
     }
