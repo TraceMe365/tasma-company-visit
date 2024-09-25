@@ -21,7 +21,7 @@
                             <div class="col-3">
                                 <button class="btn btn-primary btn-sm" id="getReportBtn">Get Report</button>
                             </div>
-                            <a href="{{ route('export.users') }}" class="btn btn-primary">Download Users</a>
+                            <!-- <a href="{{ route('export.users') }}" class="btn btn-primary">Download Users</a> -->
                         </div>
                     </div>
                 </div>
