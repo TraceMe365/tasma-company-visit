@@ -55,18 +55,11 @@
                 console.log(response);
                 console.log(response.fileUrl)
                 if (response.fileUrl) {
-                    // Create a temporary link element
                     var link = document.createElement('a');
                     link.href = response.fileUrl;
                     link.download = 'Company-Visit-Summary.xlsx';
-
-                    // Append the link to the body (required for Firefox)
                     document.body.appendChild(link);
-
-                    // Trigger the download by simulating a click
                     link.click();
-
-                    // Remove the link from the DOM
                     document.body.removeChild(link);
                 } else {
                     alert('File not found');
