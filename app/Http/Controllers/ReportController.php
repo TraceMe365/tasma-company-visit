@@ -6,6 +6,7 @@ use App\Exports\SSExport;
 use App\Exports\UsersExport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WialonController;
+use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
@@ -71,7 +72,7 @@ class ReportController extends Controller
                         if(!empty($data)){
                             foreach($data as $array){
                                 // Create Excel
-                                $formatted = $this->createFormattedArray($array,$fromHuman,$toHuman);
+                                return $this->createFormattedArray($array,$fromHuman,$toHuman);
                             }
                         }
                     }
@@ -82,6 +83,7 @@ class ReportController extends Controller
 
     function createFormattedArray($array,$from,$to)
     {
+        
         $days     = $this->getDaysInBetween($from,$to);
         $allRows  = [];
         $firstRow = ['','',$days,''];
@@ -128,7 +130,12 @@ class ReportController extends Controller
         }
         $allRowsNoIndex = [];
         $export   = new SSExport($allRows,$array['name']);
-        Excel::store($export, 'Company Visit Summary.xlsx','local');
+        $filePath = 'Company-Visit-Summary.xlsx';
+        Excel::store($export, $filePath, 'public');
+        return response()->json([
+            'fileUrl' => env('APP_URL') . '/storage/' . $filePath
+        ]);
+
     }
 
     function getDaysInBetween($from,$to)
