@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MultiSheetExport;
 use App\Exports\SSExport;
 use App\Exports\UsersExport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\WialonController;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -70,10 +72,19 @@ class ReportController extends Controller
                             array_push($data,$rec);
                         }
                         if(!empty($data)){
+                            $files = [];
+                            $names = [];
                             foreach($data as $array){
                                 // Create Excel
-                                return $this->createFormattedArray($array,$fromHuman,$toHuman);
+                                $files[] = $this->createFormattedArray($array,$fromHuman,$toHuman);
+                                $names[]  = $array['name'];
                             }
+                            $time = Carbon::now()->timestamp;
+                            $filePath = "Company-Visit-Summary-$time.xlsx";
+                            Excel::store(new MultiSheetExport($files,$names), $filePath, 'public');
+                            return response()->json([
+                                'fileUrl' => env('APP_URL') . '/storage/' . $filePath
+                            ]);
                         }
                     }
                 }
@@ -128,13 +139,13 @@ class ReportController extends Controller
             }        
             $rows[2] = $newDates;
         }
-        $allRowsNoIndex = [];
-        $export   = new SSExport($allRows,$array['name']);
-        $filePath = 'Company-Visit-Summary.xlsx';
-        Excel::store($export, $filePath, 'public');
-        return response()->json([
-            'fileUrl' => env('APP_URL') . '/storage/' . $filePath
-        ]);
+        return $allRows;
+        // $export   = new SSExport($allRows,$array['name']);
+        // $filePath = 'Company-Visit-Summary.xlsx';
+        // Excel::store($export, $filePath, 'public');
+        // return response()->json([
+        //     'fileUrl' => env('APP_URL') . '/storage/' . $filePath
+        // ]);
 
     }
 

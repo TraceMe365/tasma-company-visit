@@ -11,22 +11,21 @@ class MultiSheetExport implements WithMultipleSheets
     use Exportable;
 
     protected $data;
+    protected $names;
 
-    public function __construct(array $data)
+    public function __construct(array $data, array $names)
     {
-        $this->data = $data;
+        $this->data  = $data;
+        $this->names = $names;
     }
 
     public function sheets(): array
     {   
-        // $sheets = [];
-        // foreach($this->data as $sheet){
-        //     $sheets[] = new SSExport($sheet,'');
-        // }
-        // return $sheets;
-        return [
-            'First Sheet' => new SSExport($this->data[0],''),
-            'Second Sheet' => new SSExport($this->data[1],''),
-        ];
+        $sheets = [];
+        foreach ($this->data as $index => $sheetData) {
+            // print_r($sheetData);die();
+            $sheets[] = new SSExport($sheetData, $this->names[$index]);
+        }
+        return $sheets;
     }
 }

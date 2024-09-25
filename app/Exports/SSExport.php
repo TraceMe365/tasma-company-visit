@@ -155,13 +155,13 @@ class SSExport implements FromArray, WithHeadings, WithEvents, ShouldAutoSize, W
             $formattedData[] = $formattedRow;
         }
         return $formattedData;
-    }
+    }   
 
     public function headings(): array
     {
         // Determine the max number of visit dates across all rows
-        
         $maxVisits = max(array_map(function ($row) {
+            // print_r($row);die();
             return count($row[2]);
         }, $this->data));
 
