@@ -127,8 +127,8 @@ class ReportController extends Controller
             $rows[2] = $newDates;
         }
         $allRowsNoIndex = [];
-        $export   = new SSExport($allRows,'Name');
-        Excel::store($export, 'CompanyVisitSummary.xlsx','local');
+        $export   = new SSExport($allRows,$array['name']);
+        Excel::store($export, 'Company Visit Summary.xlsx','local');
     }
 
     function getDaysInBetween($from,$to)
