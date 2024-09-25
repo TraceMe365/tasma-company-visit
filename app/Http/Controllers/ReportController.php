@@ -99,7 +99,7 @@ class ReportController extends Controller
         $allRows  = [];
         $firstRow = ['','',$days,''];
         array_push($allRows,$firstRow);
-       
+        
         for ($i = 0; $i < count($array['locations']['location_name']); $i++) {
             $row = [
                 $array['locations']['location_name'][$i], 
@@ -126,7 +126,6 @@ class ReportController extends Controller
             if ($index === 0) {
                 continue;
             }
-        
             // Get the dates from the second array
             $datesInSecondArray = $rows[2];
             $newDates = [];
@@ -139,14 +138,31 @@ class ReportController extends Controller
             }        
             $rows[2] = $newDates;
         }
-        return $allRows;
-        // $export   = new SSExport($allRows,$array['name']);
-        // $filePath = 'Company-Visit-Summary.xlsx';
-        // Excel::store($export, $filePath, 'public');
-        // return response()->json([
-        //     'fileUrl' => env('APP_URL') . '/storage/' . $filePath
-        // ]);
 
+        // Merge duplicate location rows
+        $mergedLocations = [];
+
+        // Iterate through each location entry
+        foreach ($allRows as $location) {
+            $locationName = $location[0];  // Extract the location name
+            
+            // Check if this location already exists in the merged array
+            if (isset($mergedLocations[$locationName])) {
+                // Merge date arrays
+                foreach ($location[2] as $index => $date) {
+                    if (!empty($date)) {
+                        $mergedLocations[$locationName][2][$index] = $date;
+                    }
+                }
+            } else {
+                // If not already in the merged array, add the entire location entry
+                $mergedLocations[$locationName] = $location;
+            }
+        }
+
+        // Convert back to a normal indexed array if needed
+        $mergedLocations = array_values($mergedLocations);
+        return $mergedLocations;
     }
 
     function getDaysInBetween($from,$to)
